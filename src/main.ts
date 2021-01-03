@@ -1,23 +1,22 @@
-import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { ConfigService } from 'src/config/config.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
 
-  const port = 5100
-
-  // Swagger
-  const options = new DocumentBuilder()
-    .setTitle('Exmerdev')
-    .setDescription('Servicio Web A')
-    .setVersion('1.0')
-    .build();
-  const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('api', app, document);
-
-  await app.listen(port);
-  Logger.log(`Server running on http://localhost:${port}`, 'Bootstrap');
+  const app = await NestFactory.createMicroservice(AppModule, {
+    transport: Transport.RMQ,
+    options: {
+      urls: [
+        'amqp://localhost:5672'
+      ],
+      queue: 'exmer-dev',
+      // false = manual acknowledgement; true = automatic acknowledgment
+      noAck: false,
+      prefetchCount: 1
+    }
+  });
+  await app.listenAsync();
 }
 bootstrap();

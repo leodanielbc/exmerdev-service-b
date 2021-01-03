@@ -5,22 +5,17 @@ import * as bcrypt from 'bcrypt';
 import { UserDto } from '../dtos/user.dto';
 
 @Injectable()
-export class AuthService {
+export class UserService {
     constructor(
-        @Inject("AUTH_MODEL") private readonly authModel: Model<Auth>
+        @Inject("USER_MODEL") private readonly userModel: Model<Auth>
     ) { }
 
     async createUser(data: UserDto) {
 
         try {
-            //Encriptar contraseña con BCRYPT
-        const BCRYPT_SALT_ROUNDS = 12;
-        const hashPassword = await bcrypt.hash(
-            data.pass,
-            BCRYPT_SALT_ROUNDS,
-        );
-        data.pass = hashPassword;
-        return await new this.authModel(data).save();
+
+            return await new this.userModel(data).save();
+
         } catch (error) {
             throw error;
         }

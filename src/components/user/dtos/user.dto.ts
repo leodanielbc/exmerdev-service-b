@@ -1,24 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsNotEmpty, IsNumber, IsPhoneNumber, IsString, Length, Matches, MaxLength, MinLength } from "class-validator";
+import { IsEmail, IsMongoId, IsNotEmpty, IsNumber, IsPhoneNumber, IsString, Length, Matches, MaxLength, MinLength } from "class-validator";
 
 export class UserDto {
-
-    @ApiProperty()
-    @IsEmail()
-    @Matches(/^\w+([.-]?\w+)@\w+([.-]?\w+)(.\w{2,4})+$/, { message: messageProperty('is not valid')})
-    @IsNotEmpty({
-        message: messageProperty('is required'),
-    })
-    email: string;
-
-    @ApiProperty()
-    @IsString()
-    @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { message: messageProperty('is too weak') })
-    @IsNotEmpty({
-        message: messageProperty('is required'),
-    })
-    pass: string;
-
 
     @ApiProperty()
     @IsNotEmpty({
@@ -54,7 +37,10 @@ export class UserDto {
     @MinLength(10, {
         message: messageProperty('must be a minimum $constraint1 characters'),
     })
-    phone: string
+    phone: string;
+
+    @IsMongoId()
+    auth: string
 }
 
 function messageProperty(message: string): string {

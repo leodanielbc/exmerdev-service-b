@@ -1,11 +1,16 @@
 import { Module, ValidationPipe } from '@nestjs/common';
 import { APP_PIPE } from '@nestjs/core';
-import { AuthModule } from './components/auth/auth.module';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { UserModule } from './components/user/user.module';
 import { ConfigModule } from './config/config.module';
 import { DatabaseConectionModule } from './drivers/database-conection/database-conection.module';
 
 @Module({
-  imports: [AuthModule, DatabaseConectionModule, ConfigModule],
+  imports: [
+    UserModule,
+    DatabaseConectionModule,
+    ConfigModule
+  ],
   controllers: [],
   providers: [
     {
